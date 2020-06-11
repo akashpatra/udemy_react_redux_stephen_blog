@@ -6,14 +6,14 @@ export const fetchPostsAndUsers = () => async (dispatch, getState) => {
     
     // Await for fetching posts. So, to avoid going to execute the next lines
     await dispatch(fetchPosts());
-    
-    // _.uniq will return an array containing unique UserIds.
-    // _.map will retuns an array containing userId from each post.
-    const userIds = _.uniq(_.map(getState().posts, 'userId'));
-    console.log(userIds);
 
-    // Fetch User for each userId
-    userIds.forEach(id => dispatch(fetchUser(id)))
+    // Using _.chain(). 
+    // value() to start the execution
+    _.chain(getState().posts)
+        .map('userId')
+        .uniq()
+        .forEach(id => dispatch(fetchUser(id)))
+        .value();
 };
 
 // Function which returns a Function
